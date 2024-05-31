@@ -1,17 +1,48 @@
 #include "snake.h"
 
-struct snake{
-    int x;
-    int y;
-    int dir;
-};
+void init_snake(){
+    Snake *new = malloc(sizeof(Snake));
+    new->x = rand() % (GRID_SIZE / 2) + (GRID_SIZE / 4);
+    new->y = rand() % (GRID_SIZE / 2) + (GRID_SIZE / 4);
+    new->dir = SNAKE_UP;
 
-typedef struct snake Snake;
+    new->next = NULL;
+    head = new;
+    tail = new;
+}
 
-Snake *nead;
-Snake *tail;
+void increase_snake(){
+    Snake *new = malloc(sizeof(Snake));
+    new->x = tail->x;
+    new->y = tail->y - 1;
+    new->dir = tail->dir;
 
-void init_snake(){/*TODO*/}
+    new->next = NULL;
+    tail->next = new;
+    
+    tail = new;
+}
+
+void move_snake(){/*TODO*/}
+
+void render_snake(SDL_Renderer *renderer){
+    SDL_SetRenderDrawColor(renderer, 0x00, 0xff, 0x00, 255);
+    int seg_size = WINDOW_HEIGHT / GRID_SIZE;
+
+    SDL_Rect seg;
+    seg.w = seg_size;
+    seg.h = seg_size;
+
+    Snake *track = head;
+
+    while(track != NULL){
+        seg.x = track->x * seg_size;
+        seg.y = track->y * seg_size;
+        SDL_RenderFillRect(renderer, &seg);
+
+        track = track->next;
+    }
+}
 
 void render_grid(SDL_Renderer *renderer){
     SDL_SetRenderDrawColor(renderer, 0x55, 0x55, 0x55, 255);
@@ -40,11 +71,13 @@ void render_apple(SDL_Renderer *renderer, int x, int y){
     apple.x = x;
     apple.y = y;
 
-    SDL_RenderDrawRect(renderer, &apple);
-
+    SDL_RenderFillRect(renderer, &apple);
 }
 
 int main(){
+    init_snake();
+    increase_snake();
+
     SDL_Window *window;
     SDL_Renderer *renderer;
 
@@ -94,7 +127,7 @@ int main(){
 
         //Render Loop
         render_grid(renderer);
-        render_apple(renderer, 100, 100);
+        render_snake(renderer);
 
         SDL_SetRenderDrawColor(renderer, 0x11, 0x11, 0x11, 100);
         SDL_RenderPresent(renderer);
