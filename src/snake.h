@@ -15,9 +15,16 @@
 enum{
     SNAKE_UP,
     SNAKE_DOWN,
-    SNAKE_RIGHT,
-    SNAKE_LEFT
+    SNAKE_LEFT,
+    SNAKE_RIGHT
 };
+
+typedef struct{
+    int x;
+    int y;
+} apple;
+
+apple Apple;
 
 struct snake{
     int x;
